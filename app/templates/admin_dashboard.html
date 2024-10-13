@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 80%;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid white;
+        }
+        input[type="submit"], input[type="text"] {
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Admin Dashboard</h2>
+    <form method="POST" action="/add_invitation">
+        <input type="text" name="name" placeholder="Enter Name" required>
+        <input type="submit" value="Add Invitation">
+    </form>
+
+    <h3>Existing Invitations</h3>
+    <table>
+        <tr>
+            <th>Name Hash</th>
+            <th>Link</th>
+            <th>Actions</th>
+        </tr>
+        <!-- Loop through invitations in the database -->
+        {% for invitation in invitations %}
+        <tr>
+            <td>{{ invitation.name_hash }}</td>
+            <td>{{ invitation.link }}</td>
+            <td>
+                <form method="POST" action="/delete_invitation">
+                    <input type="hidden" name="name_hash" value="{{ invitation.name_hash }}">
+                    <input type="submit" value="Delete">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
