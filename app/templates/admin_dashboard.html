@@ -49,8 +49,9 @@
             background-color: #555;
         }
         input[type="text"] {
-            width: 90%; /* Wider input field to accommodate long URLs */
+            width: 100%; /* Wider input field to accommodate long URLs */
             padding: 5px;
+            text-align: center; /* Center text inside the input box */
         }
         h1, h2 {
             color: white;
@@ -74,19 +75,17 @@
         
         <table>
             <tr>
-                <th>Name</th> <!-- Added Name column -->
-                <th>Name Hash</th>
+                <th>Name</th> <!-- Removed Name Hash column -->
                 <th>Link</th>
                 <th>Actions</th>
             </tr>
             {% for invitation in invitations %}
             <tr>
-                <td>{{ invitation[0] }}</td> <!-- Placeholder for name -->
-                <td>{{ invitation[1] }}</td>
+                <td>{{ invitation[0] }}</td> <!-- Name column -->
                 <td>
                     <form method="POST" action="/edit_invitation">
                         <input type="hidden" name="name_hash" value="{{ invitation[0] }}">
-                        <input type="text" name="link" value="{{ invitation[1] }}" required>
+                        <input type="text" name="link" value="{{ invitation[1] }}" required> <!-- Full link input -->
                         <input type="submit" value="Update Link">
                     </form>
                 </td>
@@ -102,8 +101,8 @@
 
         <h2>Add a New Invitation</h2>
         <form method="POST" action="/add_invitation">
-            <input type="text" name="name" placeholder="Enter name" required>
-            <input type="text" name="link" placeholder="Enter link" required>
+            <input type="text" name="name" placeholder="Enter name" required> <!-- Centered text in input -->
+            <input type="text" name="link" placeholder="Enter link" required> <!-- Centered text in input -->
             <input type="submit" value="Add Invitation">
         </form>
     </div>
