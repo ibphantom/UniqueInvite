@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Invitation Search</title>
+    <title>Invitation</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center; /* Center text */
-            background-color: white; /* Invert colors: white background */
-            color: black; /* Black text for contrast */
+            background-color: black; /* Invert colors: white background */
+            color: white; /* White text for contrast */
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -15,7 +15,7 @@
             margin: 0;
         }
         form {
-            background-color: #fff;
+            background-color: #000;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
@@ -26,8 +26,11 @@
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 4px;
-            border: 1px solid #ddd;
+            border: 1px solid #000;
             box-sizing: border-box; /* Ensure padding doesn't affect width */
+            text-align: center; /* Center the placeholder text */
+            color: white; /* White text inside the input */
+            background-color: #333; /* Slightly darker background for input */
         }
         input[type="submit"] {
             width: 100%;
@@ -48,8 +51,8 @@
 </head>
 <body>
     <form method="POST">
-        <h2>Enter Your Name</h2>
-        <input type="text" name="name" placeholder="Your name" required>
+        <h2>Who Invited You?</h2>
+        <input type="text" name="name" placeholder="My Friend" required>
         <input type="submit" value="Check Invitation">
         {% if error %}
         <p class="error">{{ error }}</p>
