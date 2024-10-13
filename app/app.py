@@ -16,7 +16,9 @@ def find_invitation(name_hash):
         host=os.getenv("MYSQL_HOST"),
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
-        database=os.getenv("MYSQL_DATABASE")
+        database=os.getenv("MYSQL_DATABASE"),
+        charset="utf8mb4",          # Set charset to utf8mb4
+        collation="utf8mb4_general_ci"  # Use utf8mb4_general_ci collation
     )
     cursor = conn.cursor()
     cursor.execute("SELECT link FROM invitations WHERE name_hash = %s", (name_hash,))
@@ -50,7 +52,9 @@ def admin_login():
             host=os.getenv("MYSQL_HOST"),
             user=os.getenv("MYSQL_USER"),
             password=os.getenv("MYSQL_PASSWORD"),
-            database=os.getenv("MYSQL_DATABASE")
+            database=os.getenv("MYSQL_DATABASE"),
+            charset="utf8mb4",          # Set charset to utf8mb4
+            collation="utf8mb4_general_ci"  # Use utf8mb4_general_ci collation
         )
         cursor = conn.cursor()
         cursor.execute("SELECT username_hash, password_hash FROM admin_users")
@@ -58,10 +62,10 @@ def admin_login():
 
         if result:
             stored_username_hash, stored_password_hash = result
-            username_hash = hashlib.sha256(username.lower().encode('utf-8')).hexdigest()
-            password_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
+            entered_username_hash = encrypt_name(username)
+            entered_password_hash = encrypt_name(password)
 
-            if username_hash == stored_username_hash and password_hash == stored_password_hash:
+            if entered_username_hash == stored_username_hash and entered_password_hash == stored_password_hash:
                 session['admin_logged_in'] = True
                 return redirect('/admin_dashboard')
             else:
@@ -80,15 +84,17 @@ def admin_dashboard():
     if not session.get('admin_logged_in'):
         return redirect('/admin_login')
 
-    # Fetch invitations to display
+    # Fetch invitations with name_hash, link, and id
     conn = mysql.connector.connect(
         host=os.getenv("MYSQL_HOST"),
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
-        database=os.getenv("MYSQL_DATABASE")
+        database=os.getenv("MYSQL_DATABASE"),
+        charset="utf8mb4",          # Set charset to utf8mb4
+        collation="utf8mb4_general_ci"  # Use utf8mb4_general_ci collation
     )
     cursor = conn.cursor()
-    cursor.execute("SELECT name_hash, link FROM invitations")
+    cursor.execute("SELECT name_hash, link, id FROM invitations")  # Include id in the query
     invitations = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -103,16 +109,19 @@ def add_invitation():
 
     name = request.form['name']
     name_hash = encrypt_name(name)
+    link = request.form['link']  # Fetch the link from the form
 
     # Insert the new invitation into the database
     conn = mysql.connector.connect(
         host=os.getenv("MYSQL_HOST"),
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
-        database=os.getenv("MYSQL_DATABASE")
+        database=os.getenv("MYSQL_DATABASE"),
+        charset="utf8mb4",          # Set charset to utf8mb4
+        collation="utf8mb4_general_ci"  # Use utf8mb4_general_ci collation
     )
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO invitations (name_hash, link) VALUES (%s, %s)", (name_hash, request.form['link']))
+    cursor.execute("INSERT INTO invitations (name_hash, link) VALUES (%s, %s)", (name_hash, link))
     conn.commit()
     cursor.close()
     conn.close()
@@ -132,7 +141,9 @@ def delete_invitation():
         host=os.getenv("MYSQL_HOST"),
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
-        database=os.getenv("MYSQL_DATABASE")
+        database=os.getenv("MYSQL_DATABASE"),
+        charset="utf8mb4",          # Set charset to utf8mb4
+        collation="utf8mb4_general_ci"  # Use utf8mb4_general_ci collation
     )
     cursor = conn.cursor()
     cursor.execute("DELETE FROM invitations WHERE name_hash = %s", (name_hash,))
@@ -142,21 +153,23 @@ def delete_invitation():
 
     return redirect('/admin_dashboard')
 
-# Route to update an invitation link
-@app.route('/update_invitation', methods=['POST'])
-def update_invitation():
+# Route to update the link of an invitation
+@app.route('/edit_invitation', methods=['POST'])
+def edit_invitation():
     if not session.get('admin_logged_in'):
         return redirect('/admin_login')
 
     name_hash = request.form['name_hash']
-    new_link = request.form['new_link']
+    new_link = request.form['link']
 
-    # Update the link for the invitation
+    # Update the invitation link in the database
     conn = mysql.connector.connect(
         host=os.getenv("MYSQL_HOST"),
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
-        database=os.getenv("MYSQL_DATABASE")
+        database=os.getenv("MYSQL_DATABASE"),
+        charset="utf8mb4",          # Set charset to utf8mb4
+        collation="utf8mb4_general_ci"  # Use utf8mb4_general_ci collation
     )
     cursor = conn.cursor()
     cursor.execute("UPDATE invitations SET link = %s WHERE name_hash = %s", (new_link, name_hash))
@@ -165,6 +178,12 @@ def update_invitation():
     conn.close()
 
     return redirect('/admin_dashboard')
+
+# Route to handle logout when the window is closed
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.pop('admin_logged_in', None)  # Remove admin login session
+    return '', 204  # No content response
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
