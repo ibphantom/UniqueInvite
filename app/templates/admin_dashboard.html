@@ -102,14 +102,14 @@
         
         <table>
             <tr>
-                <th>Name</th> <!-- Name column (currently empty) -->
+                <th>Name ID</th> <!-- Name ID column for ID from invitations table -->
                 <th>Hash</th> <!-- Hash column for name_hash -->
                 <th>Link</th> <!-- Link column -->
                 <th>Actions</th>
             </tr>
             {% for invitation in invitations %}
             <tr>
-                <td></td> <!-- Name column (empty for now) -->
+                <td>{{ invitation[2] }}</td> <!-- Name ID (id) column -->
                 <td>{{ invitation[0] }}</td> <!-- Hash (name_hash) column -->
                 <td>
                     <form method="POST" action="/edit_invitation">
