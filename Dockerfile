@@ -4,10 +4,10 @@ FROM python:3.9-slim
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the contents of the "app" directory into the container's "/app" directory
-COPY ./app/ .
+# Copy the entire project into the container's "/app" directory
+COPY . /app
 
-# Install the dependencies from requirements.txt
+# Install the dependencies from requirements.txt in the root
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose port 5000 for Flask
@@ -20,4 +20,4 @@ ENV MYSQL_PASSWORD=your_password
 ENV MYSQL_DATABASE=your_database
 
 # Run the Flask app
-CMD ["python", "app.py"]
+CMD ["python", "app/app.py"]
