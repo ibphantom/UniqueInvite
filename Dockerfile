@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy the entire project into the container's "/app" directory
 COPY . /app
 
-# Install the dependencies from requirements.txt in the root
-RUN pip install --no-cache-dir -r requirements.txt
+# Install the dependencies from requirements.txt located in the /app folder
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Expose port 5000 for Flask
 EXPOSE 5000
