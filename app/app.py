@@ -6,7 +6,7 @@ import os
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Needed for session handling
 
-# Function to hash names (for index.html use and admin login)
+# Function to hash strings (for both name and admin login)
 def encrypt_string(data):
     return hashlib.sha256(data.encode('utf-8')).hexdigest()
 
@@ -31,8 +31,8 @@ def find_invitation(name_hash):
 @app.route('/', methods=['GET', 'POST'])
 def search_name():
     if request.method == 'POST':
-        name = request.form['name']
-        name_hash = encrypt_string(name.lower())  # Use SHA-256 for name hashing
+        name = request.form['name'].strip().lower()  # Strip whitespace and convert to lowercase
+        name_hash = encrypt_string(name)  # Use SHA-256 for name hashing
         link = find_invitation(name_hash)
         if link:
             return redirect(link[0])
@@ -47,8 +47,8 @@ def admin_login():
         username = request.form['username']
         password = request.form['password']
 
-        # Hash the entered username and password
-        hashed_username = encrypt_string(username)
+        # Hash the entered username and password using SHA-256
+        hashed_username = encrypt_string(username.strip().lower())
         hashed_password = encrypt_string(password)
 
         # Connect to database and check admin credentials
@@ -109,7 +109,7 @@ def add_invitation():
     if not session.get('admin_logged_in'):
         return redirect('/admin_login')
 
-    name = request.form['name']
+    name = request.form['name'].strip().lower()  # Strip whitespace and convert to lowercase
     name_hash = encrypt_string(name)
 
     # Insert the new invitation into the database
@@ -135,7 +135,7 @@ def delete_invitation():
     if not session.get('admin_logged_in'):
         return redirect('/admin_login')
 
-    name_hash = request.form['name_hash']
+    name_hash = request.form['name_hash']  # Ensure the correct name_hash is sent in the form
 
     # Delete the invitation from the database
     conn = mysql.connector.connect(
