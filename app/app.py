@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template, session
+from flask import Flask, request, redirect, render_template, session, url_for
 import hashlib
 import mysql.connector
 import os
@@ -6,21 +6,21 @@ import requests
 import xml.etree.ElementTree as ET  # For parsing XML
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
+app.secret_key = 'your_secret_key'  # Set a secret key for session handling
 
-# Function to hash names (for index.html use)
+# Function to hash names (for invitation use)
 def encrypt_name(name):
     return hashlib.sha256(name.lower().encode('utf-8')).hexdigest()
 
-# Function to find an invitation in the database (for index.html)
+# Function to find an invitation in the database
 def find_invitation(name_hash):
     conn = mysql.connector.connect(
         host=os.getenv("MYSQL_HOST"),
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
         database=os.getenv("MYSQL_DATABASE"),
-        charset="utf8mb4",
-        collation="utf8mb4_general_ci"
+        charset='utf8mb4',  # Ensure the proper charset is used
+        collation='utf8mb4_unicode_ci'
     )
     cursor = conn.cursor()
     cursor.execute("SELECT link FROM invitations WHERE name_hash = %s", (name_hash,))
@@ -49,13 +49,14 @@ def admin_login():
         username = request.form['username']
         password = request.form['password']
 
+        # Connect to database and check admin credentials
         conn = mysql.connector.connect(
             host=os.getenv("MYSQL_HOST"),
             user=os.getenv("MYSQL_USER"),
             password=os.getenv("MYSQL_PASSWORD"),
             database=os.getenv("MYSQL_DATABASE"),
-            charset="utf8mb4",
-            collation="utf8mb4_general_ci"
+            charset='utf8mb4',  # Ensure the proper charset is used
+            collation='utf8mb4_unicode_ci'
         )
         cursor = conn.cursor()
         cursor.execute("SELECT username_hash, password_hash FROM admin_users")
@@ -85,13 +86,14 @@ def admin_dashboard():
     if not session.get('admin_logged_in'):
         return redirect('/admin_login')
 
+    # Fetch invitations to display
     conn = mysql.connector.connect(
         host=os.getenv("MYSQL_HOST"),
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
         database=os.getenv("MYSQL_DATABASE"),
-        charset="utf8mb4",
-        collation="utf8mb4_general_ci"
+        charset='utf8mb4',  # Ensure the proper charset is used
+        collation='utf8mb4_unicode_ci'
     )
     cursor = conn.cursor()
     cursor.execute("SELECT name_hash, link, id FROM invitations")
@@ -108,16 +110,17 @@ def add_invitation():
         return redirect('/admin_login')
 
     name = request.form['name']
-    name_hash = encrypt_name(name)
     link = request.form['link']
+    name_hash = encrypt_name(name)
 
+    # Insert the new invitation into the database
     conn = mysql.connector.connect(
         host=os.getenv("MYSQL_HOST"),
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
         database=os.getenv("MYSQL_DATABASE"),
-        charset="utf8mb4",
-        collation="utf8mb4_general_ci"
+        charset='utf8mb4',  # Ensure the proper charset is used
+        collation='utf8mb4_unicode_ci'
     )
     cursor = conn.cursor()
     cursor.execute("INSERT INTO invitations (name_hash, link) VALUES (%s, %s)", (name_hash, link))
@@ -135,13 +138,14 @@ def delete_invitation():
 
     name_hash = request.form['name_hash']
 
+    # Delete the invitation from the database
     conn = mysql.connector.connect(
         host=os.getenv("MYSQL_HOST"),
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
         database=os.getenv("MYSQL_DATABASE"),
-        charset="utf8mb4",
-        collation="utf8mb4_general_ci"
+        charset='utf8mb4',  # Ensure the proper charset is used
+        collation='utf8mb4_unicode_ci'
     )
     cursor = conn.cursor()
     cursor.execute("DELETE FROM invitations WHERE name_hash = %s", (name_hash,))
@@ -151,11 +155,37 @@ def delete_invitation():
 
     return redirect('/admin_dashboard')
 
+# Route to update an invitation's link
+@app.route('/update_invitation', methods=['POST'])
+def update_invitation():
+    if not session.get('admin_logged_in'):
+        return redirect('/admin_login')
+
+    name_hash = request.form['name_hash']
+    new_link = request.form['new_link']
+
+    # Update the invitation's link in the database
+    conn = mysql.connector.connect(
+        host=os.getenv("MYSQL_HOST"),
+        user=os.getenv("MYSQL_USER"),
+        password=os.getenv("MYSQL_PASSWORD"),
+        database=os.getenv("MYSQL_DATABASE"),
+        charset='utf8mb4',  # Ensure the proper charset is used
+        collation='utf8mb4_unicode_ci'
+    )
+    cursor = conn.cursor()
+    cursor.execute("UPDATE invitations SET link = %s WHERE name_hash = %s", (new_link, name_hash))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return redirect('/admin_dashboard')
+
 # Plex Query Route to fetch Plex data using API token and server URL
 @app.route('/query_plex', methods=['POST'])
 def query_plex():
-    if not session.get('admin_logged_in'):
-        return redirect('/admin_login')
+    if not session.get('admin_logged_in'):  # Ensure admin is logged in
+        return redirect(url_for('admin_login'))
 
     plex_token = request.form['plex_token']
     plex_server_url = request.form['plex_server_url']
@@ -170,10 +200,13 @@ def query_plex():
         response = requests.get(url, headers=headers)
         response.raise_for_status()
 
+        # Print the raw response to the logs for troubleshooting
+        print(f"Response from Plex: {response.text}")
+
         # Parse the XML response
         root = ET.fromstring(response.text)
 
-        # Extract server information from XML (adjust this logic as needed)
+        # Extract server information from XML
         plex_data = []
         for server in root.findall('Server'):
             plex_data.append({
