@@ -4,10 +4,13 @@ FROM python:3.9-slim
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy everything inside the "app" folder from your local machine to the container's /app directory
+# Copy the contents of the "app" directory to /app in the container
 COPY ./app /app
 
-# Install the dependencies from requirements.txt located inside /app
+# Debugging: List the contents of the /app directory to ensure requirements.txt is copied
+RUN ls -la /app
+
+# Install the dependencies from requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Expose port 5000 for Flask
