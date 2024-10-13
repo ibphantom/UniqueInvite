@@ -2,7 +2,8 @@ from flask import Flask, request, redirect, render_template, session
 import hashlib
 import mysql.connector
 import os
-import requests  # Ensure requests is in requirements.txt
+import requests
+import xml.etree.ElementTree as ET  # For parsing XML
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -150,7 +151,7 @@ def delete_invitation():
 
     return redirect('/admin_dashboard')
 
-# Plex Query Route
+# Plex Query Route to fetch Plex data using API token and server URL
 @app.route('/query_plex', methods=['POST'])
 def query_plex():
     if not session.get('admin_logged_in'):
@@ -159,6 +160,7 @@ def query_plex():
     plex_token = request.form['plex_token']
     plex_server_url = request.form['plex_server_url']
 
+    # Make a request to Plex API using the token and server URL
     url = f"http://{plex_server_url}:32400/servers"
     headers = {
         'X-Plex-Token': plex_token
@@ -168,16 +170,19 @@ def query_plex():
         response = requests.get(url, headers=headers)
         response.raise_for_status()
 
-        plex_data = response.json()
-        plex_users = []  # Example data structure
-        for user in plex_data['MediaContainer']['User']:
-            plex_users.append({
-                'username': user['title'],
-                'email': user.get('email', 'N/A'),
-                'roles': user.get('roles', 'N/A')
+        # Parse the XML response
+        root = ET.fromstring(response.text)
+
+        # Extract server information from XML (adjust this logic as needed)
+        plex_data = []
+        for server in root.findall('Server'):
+            plex_data.append({
+                'name': server.get('name'),
+                'address': server.get('address'),
+                'version': server.get('version')
             })
 
-        return render_template('admin_dashboard.html', plex_users=plex_users)
+        return render_template('admin_dashboard.html', plex_servers=plex_data)
 
     except requests.RequestException as e:
         return render_template('admin_dashboard.html', error=f"Failed to connect to Plex API: {e}")
