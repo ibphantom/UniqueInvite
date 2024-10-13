@@ -5,24 +5,41 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            text-align: center; /* Center text */
+            background-color: white; /* Invert colors: white background */
+            color: black; /* Black text for contrast */
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
+            margin: 0;
         }
         form {
             background-color: #fff;
             padding: 20px;
-            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+            width: 300px; /* Fix width of form for a consistent layout */
         }
-        input[type="text"], input[type="submit"] {
-            width: 100%;
+        input[type="text"] {
+            width: 100%; /* Make the search box fit inside the form */
             padding: 10px;
-            margin: 10px 0;
+            margin-bottom: 10px;
             border-radius: 4px;
             border: 1px solid #ddd;
+            box-sizing: border-box; /* Ensure padding doesn't affect width */
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background-color: black; /* Invert button color */
+            color: white; /* White text on black button */
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #555; /* Slightly lighter on hover */
         }
         .error {
             color: red;
