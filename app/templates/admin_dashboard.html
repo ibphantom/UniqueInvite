@@ -52,10 +52,21 @@
             width: auto; /* Auto width to adapt to content */
             min-width: 300px; /* Set a minimum width */
             padding: 5px;
-            text-align: left; /* Left align for long URLs */
+            text-align: center; /* Centered text in link input */
         }
         h1, h2 {
             color: white;
+        }
+        .delete-button {
+            background-color: #d9534f; /* Garnet/Red color */
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .delete-button:hover {
+            background-color: #c9302c; /* Darker red on hover */
         }
     </style>
 
@@ -91,24 +102,26 @@
         
         <table>
             <tr>
+                <th>Name</th> <!-- Name column (currently empty) -->
                 <th>Hash</th> <!-- Hash column for name_hash -->
                 <th>Link</th> <!-- Link column -->
                 <th>Actions</th>
             </tr>
             {% for invitation in invitations %}
             <tr>
+                <td></td> <!-- Name column (empty for now) -->
                 <td>{{ invitation[0] }}</td> <!-- Hash (name_hash) column -->
                 <td>
                     <form method="POST" action="/edit_invitation">
                         <input type="hidden" name="name_hash" value="{{ invitation[0] }}"> <!-- Pass the hash for editing -->
-                        <input type="text" name="link" value="{{ invitation[1] }}" class="link-input" required> <!-- Editable link -->
+                        <input type="text" name="link" value="{{ invitation[1] }}" class="link-input" required> <!-- Editable link with centered text -->
                         <input type="submit" value="Update Link">
                     </form>
                 </td>
                 <td>
                     <form method="POST" action="/delete_invitation">
                         <input type="hidden" name="name_hash" value="{{ invitation[0] }}"> <!-- Pass the hash for deletion -->
-                        <input type="submit" value="Delete">
+                        <input type="submit" value="Delete" class="delete-button"> <!-- Delete button in garnet/red color -->
                     </form>
                 </td>
             </tr>
