@@ -1,127 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
             text-align: center;
-            background-color: black;
-            color: white;
-            margin: 0;
-        }
-        form {
-            display: inline-block;
-            margin-bottom: 20px;
-        }
-        input[type="text"], input[type="submit"] {
-            width: 300px;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-            border: 1px solid #ddd;
         }
         table {
-            width: 100%;
+            margin: 20px auto;
             border-collapse: collapse;
-            margin: 20px 0;
+            width: 80%;
         }
-        table, th, td {
+        th, td {
+            padding: 10px;
             border: 1px solid #ddd;
-            padding: 8px;
+            text-align: left;
         }
         th {
-            background-color: #333;
-            color: white;
+            background-color: #f2f2f2;
         }
-        .query-section {
-            margin-top: 30px;
+        input[type="text"] {
+            padding: 5px;
+            margin: 10px;
+            width: 250px;
         }
         .delete-button {
-            background-color: #ff5555;
             color: white;
+            background-color: red;
+            padding: 5px 10px;
             border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
             cursor: pointer;
         }
-        .delete-button:hover {
-            background-color: #ff3333;
+        .update-button {
+            color: white;
+            background-color: green;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+        }
+        .query-button {
+            color: white;
+            background-color: blue;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<h1>Admin Dashboard</h1>
+    <h1>Admin Dashboard</h1>
 
-<form method="POST" action="/add_invitation">
-    <input type="text" name="name" placeholder="Enter name" required>
-    <input type="text" name="link" placeholder="Enter link" required>
-    <input type="submit" value="Add Invitation">
-</form>
-
-<table>
-    <thead>
-        <tr>
-            <th>Name ID</th>
-            <th>Hash</th>
-            <th>Link</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for invitation in invitations %}
-        <tr>
-            <td>{{ invitation[2] }}</td> <!-- ID -->
-            <td>{{ invitation[0] }}</td> <!-- Hash -->
-            <td>
-                <form method="POST" action="/edit_invitation">
-                    <input type="hidden" name="name_hash" value="{{ invitation[0] }}">
-                    <input type="text" name="link" value="{{ invitation[1] }}" style="width: 100%;">
-                    <input type="submit" value="Update">
-                </form>
-            </td>
-            <td>
-                <form method="POST" action="/delete_invitation">
-                    <input type="hidden" name="name_hash" value="{{ invitation[0] }}">
-                    <input type="submit" value="Delete" class="delete-button">
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<!-- Plex API Section -->
-<div class="query-section">
-    <form method="POST" action="/query_plex">
-        <input type="text" name="plex_token" placeholder="Enter Plex Token" required>
-        <input type="text" name="plex_server_url" placeholder="Enter Plex Server URL" required>
-        <input type="submit" value="Query Plex">
-    </form>
-</div>
-
-<!-- Display Plex User Information -->
-{% if plex_users %}
+    <h2>Manage Invitations</h2>
     <table>
         <thead>
             <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Roles</th>
+                <th>Name ID</th>
+                <th>Hash</th>
+                <th>Link</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            {% for user in plex_users %}
+            {% for invitation in invitations %}
             <tr>
-                <td>{{ user['username'] }}</td>
-                <td>{{ user['email'] }}</td>
-                <td>{{ user['roles'] }}</td>
+                <td>{{ invitation[2] }}</td> <!-- Name ID -->
+                <td>{{ invitation[0] }}</td> <!-- Hash -->
+                <td>
+                    <form action="/update_invitation" method="post">
+                        <input type="hidden" name="name_hash" value="{{ invitation[0] }}">
+                        <input type="text" name="new_link" value="{{ invitation[1] }}" style="width:100%;">
+                        <input type="submit" value="Update" class="update-button">
+                    </form>
+                </td>
+                <td>
+                    <form action="/delete_invitation" method="post">
+                        <input type="hidden" name="name_hash" value="{{ invitation[0] }}">
+                        <input type="submit" value="Delete" class="delete-button">
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-{% endif %}
+
+    <h2>Add New Invitation</h2>
+    <form action="/add_invitation" method="post">
+        <input type="text" name="name" placeholder="Enter name" required>
+        <input type="text" name="link" placeholder="Enter link" required>
+        <input type="submit" value="Add Invitation">
+    </form>
+
+    <h2>Query Plex Servers</h2>
+    <form action="/query_plex" method="post">
+        <input type="text" name="plex_token" placeholder="Enter Plex API Token" required>
+        <input type="text" name="plex_server_url" placeholder="Enter Plex Server URL" required>
+        <input type="submit" value="Query Plex" class="query-button">
+    </form>
+
+    <h3>Plex Server Information</h3>
+    {% if plex_servers %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Server Name</th>
+                    <th>IP Address</th>
+                    <th>Version</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for server in plex_servers %}
+                <tr>
+                    <td>{{ server.name }}</td>
+                    <td>{{ server.address }}</td>
+                    <td>{{ server.version }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No Plex server data available. Query to fetch information.</p>
+    {% endif %}
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
 
 </body>
 </html>
