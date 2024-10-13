@@ -42,13 +42,6 @@
             border: none;
             cursor: pointer;
         }
-        .query-button {
-            color: white;
-            background-color: blue;
-            padding: 5px 10px;
-            border: none;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
@@ -59,7 +52,6 @@
     <table>
         <thead>
             <tr>
-                <th>Name ID</th>
                 <th>Hash</th>
                 <th>Link</th>
                 <th>Actions</th>
@@ -68,7 +60,6 @@
         <tbody>
             {% for invitation in invitations %}
             <tr>
-                <td>{{ invitation[2] }}</td> <!-- Name ID -->
                 <td>{{ invitation[0] }}</td> <!-- Hash -->
                 <td>
                     <form action="/update_invitation" method="post">
@@ -94,41 +85,6 @@
         <input type="text" name="link" placeholder="Enter link" required>
         <input type="submit" value="Add Invitation">
     </form>
-
-    <h2>Query Plex Servers</h2>
-    <form action="/query_plex" method="post">
-        <input type="text" name="plex_token" placeholder="Enter Plex API Token" required>
-        <input type="text" name="plex_server_url" placeholder="Enter Plex Server URL" required>
-        <input type="submit" value="Query Plex" class="query-button">
-    </form>
-
-    <h3>Plex Server Information</h3>
-    {% if plex_servers %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Server Name</th>
-                    <th>IP Address</th>
-                    <th>Version</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for server in plex_servers %}
-                <tr>
-                    <td>{{ server.name }}</td>
-                    <td>{{ server.address }}</td>
-                    <td>{{ server.version }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No Plex server data available. Query to fetch information.</p>
-    {% endif %}
-
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
 
 </body>
 </html>
