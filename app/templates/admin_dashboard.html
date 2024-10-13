@@ -32,16 +32,20 @@
         form {
             display: inline;
         }
-        input[type="submit"] {
+        input[type="submit"], input[type="text"] {
             padding: 5px 10px;
+            margin: 5px;
             border: none;
             background-color: #333;
             color: white;
-            cursor: pointer;
             border-radius: 4px;
         }
         input[type="submit"]:hover {
             background-color: #555;
+        }
+        input[type="text"] {
+            width: 90%;
+            padding: 5px;
         }
         .container {
             width: 80%;
@@ -65,7 +69,13 @@
             {% for invitation in invitations %}
             <tr>
                 <td>{{ invitation[0] }}</td>
-                <td>{{ invitation[1] }}</td>
+                <td>
+                    <form method="POST" action="/edit_invitation">
+                        <input type="hidden" name="name_hash" value="{{ invitation[0] }}">
+                        <input type="text" name="link" value="{{ invitation[1] }}" required>
+                        <input type="submit" value="Update Link">
+                    </form>
+                </td>
                 <td>
                     <form method="POST" action="/delete_invitation">
                         <input type="hidden" name="name_hash" value="{{ invitation[0] }}">
@@ -79,6 +89,7 @@
         <h2>Add a New Invitation</h2>
         <form method="POST" action="/add_invitation">
             <input type="text" name="name" placeholder="Enter name" required>
+            <input type="text" name="link" placeholder="Enter link" required>
             <input type="submit" value="Add Invitation">
         </form>
     </div>
