@@ -16,7 +16,9 @@ def find_invitation(name_hash):
         host=os.getenv("MYSQL_HOST"),
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
-        database=os.getenv("MYSQL_DATABASE")
+        database=os.getenv("MYSQL_DATABASE"),
+        charset="utf8mb4",          # Set charset to utf8mb4
+        collation="utf8mb4_general_ci"  # Use utf8mb4_general_ci collation
     )
     cursor = conn.cursor()
     cursor.execute("SELECT link FROM invitations WHERE name_hash = %s", (name_hash,))
@@ -50,7 +52,9 @@ def admin_login():
             host=os.getenv("MYSQL_HOST"),
             user=os.getenv("MYSQL_USER"),
             password=os.getenv("MYSQL_PASSWORD"),
-            database=os.getenv("MYSQL_DATABASE")
+            database=os.getenv("MYSQL_DATABASE"),
+            charset="utf8mb4",          # Set charset to utf8mb4
+            collation="utf8mb4_general_ci"  # Use utf8mb4_general_ci collation
         )
         cursor = conn.cursor()
         cursor.execute("SELECT username_hash, password_hash FROM admin_users")
@@ -85,7 +89,9 @@ def admin_dashboard():
         host=os.getenv("MYSQL_HOST"),
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
-        database=os.getenv("MYSQL_DATABASE")
+        database=os.getenv("MYSQL_DATABASE"),
+        charset="utf8mb4",          # Set charset to utf8mb4
+        collation="utf8mb4_general_ci"  # Use utf8mb4_general_ci collation
     )
     cursor = conn.cursor()
     cursor.execute("SELECT name_hash, link, id FROM invitations")  # Include id in the query
@@ -110,7 +116,9 @@ def add_invitation():
         host=os.getenv("MYSQL_HOST"),
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
-        database=os.getenv("MYSQL_DATABASE")
+        database=os.getenv("MYSQL_DATABASE"),
+        charset="utf8mb4",          # Set charset to utf8mb4
+        collation="utf8mb4_general_ci"  # Use utf8mb4_general_ci collation
     )
     cursor = conn.cursor()
     cursor.execute("INSERT INTO invitations (name_hash, link) VALUES (%s, %s)", (name_hash, link))
@@ -133,7 +141,9 @@ def delete_invitation():
         host=os.getenv("MYSQL_HOST"),
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
-        database=os.getenv("MYSQL_DATABASE")
+        database=os.getenv("MYSQL_DATABASE"),
+        charset="utf8mb4",          # Set charset to utf8mb4
+        collation="utf8mb4_general_ci"  # Use utf8mb4_general_ci collation
     )
     cursor = conn.cursor()
     cursor.execute("DELETE FROM invitations WHERE name_hash = %s", (name_hash,))
@@ -157,7 +167,9 @@ def edit_invitation():
         host=os.getenv("MYSQL_HOST"),
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
-        database=os.getenv("MYSQL_DATABASE")
+        database=os.getenv("MYSQL_DATABASE"),
+        charset="utf8mb4",          # Set charset to utf8mb4
+        collation="utf8mb4_general_ci"  # Use utf8mb4_general_ci collation
     )
     cursor = conn.cursor()
     cursor.execute("UPDATE invitations SET link = %s WHERE name_hash = %s", (new_link, name_hash))
