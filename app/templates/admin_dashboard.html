@@ -7,14 +7,19 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: black; /* Invert colors */
-            color: white;
             text-align: center;
+            background-color: black; /* Black background */
+            color: white; /* White text for contrast */
             margin: 0;
             padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
         }
         table {
-            width: 50%;
+            width: 80%; /* Adjust width for larger content */
             margin: 0 auto;
             border-collapse: collapse;
             background-color: white; /* White background for the table */
@@ -44,14 +49,21 @@
             background-color: #555;
         }
         input[type="text"] {
-            width: 90%;
+            width: 90%; /* Wider input field to accommodate long URLs */
             padding: 5px;
         }
-        .container {
-            width: 80%;
-            margin: 20px auto;
+        h1, h2 {
+            color: white;
         }
     </style>
+
+    <script>
+        // Logout the admin when the window is closed or refreshed
+        window.addEventListener("beforeunload", function () {
+            // Send a request to log out when the window is closed
+            navigator.sendBeacon("/logout");
+        });
+    </script>
 </head>
 <body>
 
@@ -62,13 +74,15 @@
         
         <table>
             <tr>
+                <th>Name</th> <!-- Added Name column -->
                 <th>Name Hash</th>
                 <th>Link</th>
                 <th>Actions</th>
             </tr>
             {% for invitation in invitations %}
             <tr>
-                <td>{{ invitation[0] }}</td>
+                <td>{{ invitation[0] }}</td> <!-- Placeholder for name -->
+                <td>{{ invitation[1] }}</td>
                 <td>
                     <form method="POST" action="/edit_invitation">
                         <input type="hidden" name="name_hash" value="{{ invitation[0] }}">
