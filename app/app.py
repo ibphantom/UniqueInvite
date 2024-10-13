@@ -2,10 +2,10 @@ from flask import Flask, request, redirect, render_template, session
 import hashlib
 import mysql.connector
 import os
-import requests  # For making HTTP requests to the Plex API
+import requests  # Ensure requests is in requirements.txt
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Needed for session handling
+app.secret_key = 'your_secret_key'
 
 # Function to hash names (for index.html use)
 def encrypt_name(name):
@@ -18,7 +18,7 @@ def find_invitation(name_hash):
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
         database=os.getenv("MYSQL_DATABASE"),
-        charset="utf8mb4",          
+        charset="utf8mb4",
         collation="utf8mb4_general_ci"
     )
     cursor = conn.cursor()
@@ -89,7 +89,7 @@ def admin_dashboard():
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
         database=os.getenv("MYSQL_DATABASE"),
-        charset="utf8mb4",          
+        charset="utf8mb4",
         collation="utf8mb4_general_ci"
     )
     cursor = conn.cursor()
@@ -115,7 +115,7 @@ def add_invitation():
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
         database=os.getenv("MYSQL_DATABASE"),
-        charset="utf8mb4",          
+        charset="utf8mb4",
         collation="utf8mb4_general_ci"
     )
     cursor = conn.cursor()
@@ -139,7 +139,7 @@ def delete_invitation():
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
         database=os.getenv("MYSQL_DATABASE"),
-        charset="utf8mb4",          
+        charset="utf8mb4",
         collation="utf8mb4_general_ci"
     )
     cursor = conn.cursor()
@@ -157,10 +157,9 @@ def query_plex():
         return redirect('/admin_login')
 
     plex_token = request.form['plex_token']
-    plex_server_ip = request.form['plex_server_ip']
+    plex_server_url = request.form['plex_server_url']
 
-    # Make a request to Plex API using the token and server IP
-    url = f"http://{plex_server_ip}:32400/servers"
+    url = f"http://{plex_server_url}:32400/servers"
     headers = {
         'X-Plex-Token': plex_token
     }
@@ -169,10 +168,7 @@ def query_plex():
         response = requests.get(url, headers=headers)
         response.raise_for_status()
 
-        # Parse the XML response (Plex typically returns XML)
         plex_data = response.json()
-
-        # For the sake of example, let's assume it returns a list of users
         plex_users = []  # Example data structure
         for user in plex_data['MediaContainer']['User']:
             plex_users.append({
