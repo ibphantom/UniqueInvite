@@ -1,58 +1,87 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: black;
+            background-color: black; /* Invert colors */
             color: white;
             text-align: center;
+            margin: 0;
             padding: 20px;
         }
         table {
+            width: 50%;
             margin: 0 auto;
             border-collapse: collapse;
-            width: 80%;
+            background-color: white; /* White background for the table */
+            color: black; /* Black text inside the table */
         }
         th, td {
             padding: 10px;
-            border: 1px solid white;
+            border: 1px solid #ddd;
+            text-align: center;
         }
-        input[type="submit"], input[type="text"] {
-            padding: 10px;
-            margin: 10px;
-            width: 200px;
+        th {
+            background-color: #333;
+            color: white;
+        }
+        form {
+            display: inline;
+        }
+        input[type="submit"] {
+            padding: 5px 10px;
+            border: none;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
         }
     </style>
 </head>
 <body>
-    <h2>Admin Dashboard</h2>
-    <form method="POST" action="/add_invitation">
-        <input type="text" name="name" placeholder="Enter Name" required>
-        <input type="submit" value="Add Invitation">
-    </form>
 
-    <h3>Existing Invitations</h3>
-    <table>
-        <tr>
-            <th>Name Hash</th>
-            <th>Link</th>
-            <th>Actions</th>
-        </tr>
-        <!-- Loop through invitations in the database -->
-        {% for invitation in invitations %}
-        <tr>
-            <td>{{ invitation.name_hash }}</td>
-            <td>{{ invitation.link }}</td>
-            <td>
-                <form method="POST" action="/delete_invitation">
-                    <input type="hidden" name="name_hash" value="{{ invitation.name_hash }}">
-                    <input type="submit" value="Delete">
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+    <h1>Admin Dashboard</h1>
+
+    <div class="container">
+        <h2>Manage Invitations</h2>
+        
+        <table>
+            <tr>
+                <th>Name Hash</th>
+                <th>Link</th>
+                <th>Actions</th>
+            </tr>
+            {% for invitation in invitations %}
+            <tr>
+                <td>{{ invitation[0] }}</td>
+                <td>{{ invitation[1] }}</td>
+                <td>
+                    <form method="POST" action="/delete_invitation">
+                        <input type="hidden" name="name_hash" value="{{ invitation[0] }}">
+                        <input type="submit" value="Delete">
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <h2>Add a New Invitation</h2>
+        <form method="POST" action="/add_invitation">
+            <input type="text" name="name" placeholder="Enter name" required>
+            <input type="submit" value="Add Invitation">
+        </form>
+    </div>
+
 </body>
 </html>
