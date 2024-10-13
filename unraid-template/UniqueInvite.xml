@@ -1,0 +1,58 @@
+<Container>
+    <Name>Your Flask App</Name>
+    <Repository>your-dockerhub-username/your-app-image</Repository>
+    <Network>bridge</Network>
+    <MyIP></MyIP>
+    <Shell>sh</Shell>
+    <Privileged>false</Privileged>
+    <Support>https://your-support-link.com</Support>
+    <Project>https://your-project-link.com</Project>
+    <Overview>A Flask-based invitational website</Overview>
+    <Category>Web Tools</Category>
+    <WebUI>http://[IP]:[PORT:5000]</WebUI>
+    <TemplateURL>https://your-github-repo-link.com</TemplateURL>
+    <Icon>https://your-icon-url.com/icon.png</Icon>
+    <ExtraParams></ExtraParams>
+    <PostArgs></PostArgs>
+    <CPUset></CPUset>
+    <DateInstalled>2024-10-13</DateInstalled>
+    <DonateText></DonateText>
+    <DonateLink></DonateLink>
+    <Description>This is an invitational website built with Flask and deployed in Docker, allowing users to search for their name and be redirected to a specific link if found in an encrypted database.</Description>
+    <Networking>
+        <Mode>bridge</Mode>
+        <Publish>
+            <Port>
+                <HostPort>5000</HostPort>
+                <ContainerPort>5000</ContainerPort>
+                <Protocol>tcp</Protocol>
+            </Port>
+        </Publish>
+    </Networking>
+    <Data>
+        <Volume>
+            <HostDir>/mnt/user/appdata/your-app</HostDir>
+            <ContainerDir>/app</ContainerDir>
+            <Mode>rw</Mode>
+        </Volume>
+    </Data>
+    <Environment>
+        <Variable>
+            <Name>MYSQL_HOST</Name>
+            <Value>mariadb</Value>
+        </Variable>
+        <Variable>
+            <Name>MYSQL_USER</Name>
+            <Value>root</Value>
+        </Variable>
+        <Variable>
+            <Name>MYSQL_PASSWORD</Name>
+            <Value>your_password</Value>
+        </Variable>
+        <Variable>
+            <Name>MYSQL_DATABASE</Name>
+            <Value>your_database</Value>
+        </Variable>
+    </Environment>
+    <Config Name="Port" Target="5000" Default="5000" Mode="tcp" Description="Application Port" Type="Port" Display="always" Required="true" Mask="false"></Config>
+</Container>
