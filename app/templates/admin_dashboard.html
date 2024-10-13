@@ -91,25 +91,23 @@
         
         <table>
             <tr>
-                <th>Name</th> <!-- Name column -->
-                <th>Hash</th> <!-- Hash column -->
+                <th>Hash</th> <!-- Hash column for name_hash -->
                 <th>Link</th> <!-- Link column -->
                 <th>Actions</th>
             </tr>
             {% for invitation in invitations %}
             <tr>
-                <td>{{ invitation[0] }}</td> <!-- Name column -->
-                <td>{{ invitation[1] }}</td> <!-- Hash column -->
+                <td>{{ invitation[0] }}</td> <!-- Hash (name_hash) column -->
                 <td>
                     <form method="POST" action="/edit_invitation">
-                        <input type="hidden" name="name_hash" value="{{ invitation[1] }}">
-                        <input type="text" name="link" value="{{ invitation[2] }}" class="link-input" required> <!-- Dynamic width link input -->
+                        <input type="hidden" name="name_hash" value="{{ invitation[0] }}"> <!-- Pass the hash for editing -->
+                        <input type="text" name="link" value="{{ invitation[1] }}" class="link-input" required> <!-- Editable link -->
                         <input type="submit" value="Update Link">
                     </form>
                 </td>
                 <td>
                     <form method="POST" action="/delete_invitation">
-                        <input type="hidden" name="name_hash" value="{{ invitation[1] }}">
+                        <input type="hidden" name="name_hash" value="{{ invitation[0] }}"> <!-- Pass the hash for deletion -->
                         <input type="submit" value="Delete">
                     </form>
                 </td>
