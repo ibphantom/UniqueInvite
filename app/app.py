@@ -2,6 +2,7 @@ from flask import Flask, request, redirect, render_template, session
 import hashlib
 import mysql.connector
 import os
+import requests  # For making HTTP requests to the Plex API
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Needed for session handling
@@ -17,8 +18,8 @@ def find_invitation(name_hash):
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
         database=os.getenv("MYSQL_DATABASE"),
-        charset="utf8mb4",          # Set charset to utf8mb4
-        collation="utf8mb4_general_ci"  # Use utf8mb4_general_ci collation
+        charset="utf8mb4",          
+        collation="utf8mb4_general_ci"
     )
     cursor = conn.cursor()
     cursor.execute("SELECT link FROM invitations WHERE name_hash = %s", (name_hash,))
@@ -47,14 +48,13 @@ def admin_login():
         username = request.form['username']
         password = request.form['password']
 
-        # Connect to database and check admin credentials
         conn = mysql.connector.connect(
             host=os.getenv("MYSQL_HOST"),
             user=os.getenv("MYSQL_USER"),
             password=os.getenv("MYSQL_PASSWORD"),
             database=os.getenv("MYSQL_DATABASE"),
-            charset="utf8mb4",          # Set charset to utf8mb4
-            collation="utf8mb4_general_ci"  # Use utf8mb4_general_ci collation
+            charset="utf8mb4",
+            collation="utf8mb4_general_ci"
         )
         cursor = conn.cursor()
         cursor.execute("SELECT username_hash, password_hash FROM admin_users")
@@ -84,17 +84,16 @@ def admin_dashboard():
     if not session.get('admin_logged_in'):
         return redirect('/admin_login')
 
-    # Fetch invitations with name_hash, link, and id
     conn = mysql.connector.connect(
         host=os.getenv("MYSQL_HOST"),
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
         database=os.getenv("MYSQL_DATABASE"),
-        charset="utf8mb4",          # Set charset to utf8mb4
-        collation="utf8mb4_general_ci"  # Use utf8mb4_general_ci collation
+        charset="utf8mb4",          
+        collation="utf8mb4_general_ci"
     )
     cursor = conn.cursor()
-    cursor.execute("SELECT name_hash, link, id FROM invitations")  # Include id in the query
+    cursor.execute("SELECT name_hash, link, id FROM invitations")
     invitations = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -109,16 +108,15 @@ def add_invitation():
 
     name = request.form['name']
     name_hash = encrypt_name(name)
-    link = request.form['link']  # Fetch the link from the form
+    link = request.form['link']
 
-    # Insert the new invitation into the database
     conn = mysql.connector.connect(
         host=os.getenv("MYSQL_HOST"),
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
         database=os.getenv("MYSQL_DATABASE"),
-        charset="utf8mb4",          # Set charset to utf8mb4
-        collation="utf8mb4_general_ci"  # Use utf8mb4_general_ci collation
+        charset="utf8mb4",          
+        collation="utf8mb4_general_ci"
     )
     cursor = conn.cursor()
     cursor.execute("INSERT INTO invitations (name_hash, link) VALUES (%s, %s)", (name_hash, link))
@@ -136,14 +134,13 @@ def delete_invitation():
 
     name_hash = request.form['name_hash']
 
-    # Delete the invitation from the database
     conn = mysql.connector.connect(
         host=os.getenv("MYSQL_HOST"),
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
         database=os.getenv("MYSQL_DATABASE"),
-        charset="utf8mb4",          # Set charset to utf8mb4
-        collation="utf8mb4_general_ci"  # Use utf8mb4_general_ci collation
+        charset="utf8mb4",          
+        collation="utf8mb4_general_ci"
     )
     cursor = conn.cursor()
     cursor.execute("DELETE FROM invitations WHERE name_hash = %s", (name_hash,))
@@ -153,37 +150,42 @@ def delete_invitation():
 
     return redirect('/admin_dashboard')
 
-# Route to update the link of an invitation
-@app.route('/edit_invitation', methods=['POST'])
-def edit_invitation():
+# Plex Query Route
+@app.route('/query_plex', methods=['POST'])
+def query_plex():
     if not session.get('admin_logged_in'):
         return redirect('/admin_login')
 
-    name_hash = request.form['name_hash']
-    new_link = request.form['link']
+    plex_token = request.form['plex_token']
+    plex_server_ip = request.form['plex_server_ip']
 
-    # Update the invitation link in the database
-    conn = mysql.connector.connect(
-        host=os.getenv("MYSQL_HOST"),
-        user=os.getenv("MYSQL_USER"),
-        password=os.getenv("MYSQL_PASSWORD"),
-        database=os.getenv("MYSQL_DATABASE"),
-        charset="utf8mb4",          # Set charset to utf8mb4
-        collation="utf8mb4_general_ci"  # Use utf8mb4_general_ci collation
-    )
-    cursor = conn.cursor()
-    cursor.execute("UPDATE invitations SET link = %s WHERE name_hash = %s", (new_link, name_hash))
-    conn.commit()
-    cursor.close()
-    conn.close()
+    # Make a request to Plex API using the token and server IP
+    url = f"http://{plex_server_ip}:32400/servers"
+    headers = {
+        'X-Plex-Token': plex_token
+    }
 
-    return redirect('/admin_dashboard')
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
 
-# Route to handle logout when the window is closed
-@app.route('/logout', methods=['POST'])
-def logout():
-    session.pop('admin_logged_in', None)  # Remove admin login session
-    return '', 204  # No content response
+        # Parse the XML response (Plex typically returns XML)
+        plex_data = response.json()
 
+        # For the sake of example, let's assume it returns a list of users
+        plex_users = []  # Example data structure
+        for user in plex_data['MediaContainer']['User']:
+            plex_users.append({
+                'username': user['title'],
+                'email': user.get('email', 'N/A'),
+                'roles': user.get('roles', 'N/A')
+            })
+
+        return render_template('admin_dashboard.html', plex_users=plex_users)
+
+    except requests.RequestException as e:
+        return render_template('admin_dashboard.html', error=f"Failed to connect to Plex API: {e}")
+
+# Run the Flask app
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
