@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: black;
-            color: white;
+            text-align: center; /* Center text */
+            background-color: black; /* Black background */
+            color: white; /* White text for contrast */
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -18,30 +20,24 @@
             background-color: #000;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
-            width: 300px;
+            box-shadow: 0px 0px 10px 0px rgba(255, 255, 255, 0.1);
+            width: 300px; /* Fix width of form for a consistent layout */
         }
-        input[type="text"], input[type="password"] {
-            width: 100%;
+        input[type="text"], input[type="password"], input[type="submit"] {
+            width: 100%; /* Make the input boxes fit inside the form */
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 4px;
-            border: 1px solid #000;
-            text-align: center;
-            color: white;
-            background-color: #333;
+            border: 1px solid #ddd;
+            box-sizing: border-box; /* Ensure padding doesn't affect width */
         }
         input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            background-color: black;
-            color: white;
+            background-color: black; /* Invert button color */
+            color: white; /* White text on black button */
             cursor: pointer;
         }
         input[type="submit"]:hover {
-            background-color: #555;
+            background-color: #555; /* Slightly lighter on hover */
         }
         .error {
             color: red;
@@ -49,7 +45,7 @@
     </style>
 </head>
 <body>
-    <form method="POST" action="/admin_login">
+    <form method="POST">
         <h2>Admin Login</h2>
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
