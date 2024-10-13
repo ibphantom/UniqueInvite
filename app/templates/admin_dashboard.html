@@ -19,7 +19,7 @@
             height: 100vh;
         }
         table {
-            width: 80%; /* Adjust width for larger content */
+            width: 90%; /* Adjust width for larger content */
             margin: 0 auto;
             border-collapse: collapse;
             background-color: white; /* White background for the table */
@@ -48,10 +48,11 @@
         input[type="submit"]:hover {
             background-color: #555;
         }
-        input[type="text"] {
-            width: 100%; /* Wider input field to accommodate long URLs */
+        input[type="text"].link-input {
+            width: auto; /* Auto width to adapt to content */
+            min-width: 300px; /* Set a minimum width */
             padding: 5px;
-            text-align: center; /* Center text inside the input box */
+            text-align: left; /* Left align for long URLs */
         }
         h1, h2 {
             color: white;
@@ -59,6 +60,21 @@
     </style>
 
     <script>
+        // Adjust the link input width based on the longest link
+        window.addEventListener("load", function () {
+            const inputs = document.querySelectorAll("input.link-input");
+            let maxWidth = 0;
+            
+            inputs.forEach(input => {
+                const length = input.value.length;
+                maxWidth = Math.max(maxWidth, length * 8); // Approx. character width
+            });
+
+            inputs.forEach(input => {
+                input.style.width = maxWidth + "px"; // Set all inputs to the max width
+            });
+        });
+
         // Logout the admin when the window is closed or refreshed
         window.addEventListener("beforeunload", function () {
             // Send a request to log out when the window is closed
@@ -75,23 +91,25 @@
         
         <table>
             <tr>
-                <th>Name</th> <!-- Removed Name Hash column -->
+                <th>Name</th> <!-- Name column -->
+                <th>Hash</th> <!-- Hash column -->
                 <th>Link</th>
                 <th>Actions</th>
             </tr>
             {% for invitation in invitations %}
             <tr>
                 <td>{{ invitation[0] }}</td> <!-- Name column -->
+                <td>{{ invitation[1] }}</td> <!-- Hash column -->
                 <td>
                     <form method="POST" action="/edit_invitation">
-                        <input type="hidden" name="name_hash" value="{{ invitation[0] }}">
-                        <input type="text" name="link" value="{{ invitation[1] }}" required> <!-- Full link input -->
+                        <input type="hidden" name="name_hash" value="{{ invitation[1] }}">
+                        <input type="text" name="link" value="{{ invitation[2] }}" class="link-input" required> <!-- Dynamic width link input -->
                         <input type="submit" value="Update Link">
                     </form>
                 </td>
                 <td>
                     <form method="POST" action="/delete_invitation">
-                        <input type="hidden" name="name_hash" value="{{ invitation[0] }}">
+                        <input type="hidden" name="name_hash" value="{{ invitation[1] }}">
                         <input type="submit" value="Delete">
                     </form>
                 </td>
