@@ -2,28 +2,13 @@ from flask import Flask, request, redirect, render_template, session
 import hashlib
 import mysql.connector
 import os
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_OAEP
-import base64
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Needed for session handling
 
-# RSA Public and Private Keys (use private key for decryption)
-private_key = """-----BEGIN RSA PRIVATE KEY-----
-...Your 4096-bit Private Key...
------END RSA PRIVATE KEY-----"""
-
-# Decrypt with RSA (Admin login encryption)
-def decrypt_rsa(encrypted_data, private_key):
-    rsa_key = RSA.import_key(private_key)
-    cipher = PKCS1_OAEP.new(rsa_key)
-    decrypted_data = cipher.decrypt(base64.b64decode(encrypted_data))
-    return decrypted_data.decode('utf-8')
-
-# Function to hash names (for index.html use)
-def encrypt_name(name):
-    return hashlib.sha256(name.lower().encode('utf-8')).hexdigest()
+# Function to hash names (for index.html use and admin login)
+def encrypt_string(data):
+    return hashlib.sha256(data.encode('utf-8')).hexdigest()
 
 # Function to find an invitation in the database (for index.html)
 def find_invitation(name_hash):
@@ -47,7 +32,7 @@ def find_invitation(name_hash):
 def search_name():
     if request.method == 'POST':
         name = request.form['name']
-        name_hash = encrypt_name(name)
+        name_hash = encrypt_string(name.lower())  # Use SHA-256 for name hashing
         link = find_invitation(name_hash)
         if link:
             return redirect(link[0])
@@ -61,6 +46,10 @@ def admin_login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+
+        # Hash the entered username and password
+        hashed_username = encrypt_string(username)
+        hashed_password = encrypt_string(password)
 
         # Connect to database and check admin credentials
         conn = mysql.connector.connect(
@@ -77,10 +66,8 @@ def admin_login():
 
         if result:
             stored_username_hash, stored_password_hash = result
-            decrypted_username = decrypt_rsa(stored_username_hash, private_key)
-            decrypted_password = decrypt_rsa(stored_password_hash, private_key)
 
-            if username == decrypted_username and password == decrypted_password:
+            if hashed_username == stored_username_hash and hashed_password == stored_password_hash:
                 session['admin_logged_in'] = True
                 return redirect('/admin_dashboard')
             else:
@@ -123,7 +110,7 @@ def add_invitation():
         return redirect('/admin_login')
 
     name = request.form['name']
-    name_hash = encrypt_name(name)
+    name_hash = encrypt_string(name)
 
     # Insert the new invitation into the database
     conn = mysql.connector.connect(
