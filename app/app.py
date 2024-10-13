@@ -2,9 +2,13 @@ from flask import Flask, request, redirect, render_template, session
 import hashlib
 import mysql.connector
 import os
+from datetime import timedelta
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Needed for session handling
+
+# Set session lifetime to 5 minutes
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5)
 
 # Function to hash strings (for both name and admin login)
 def encrypt_string(data):
@@ -69,6 +73,7 @@ def admin_login():
 
             if hashed_username == stored_username_hash and hashed_password == stored_password_hash:
                 session['admin_logged_in'] = True
+                session.permanent = True  # Keep session alive until expiration time
                 return redirect('/admin_dashboard')
             else:
                 return render_template('admin.html', error="Invalid credentials")
@@ -180,6 +185,12 @@ def delete_invitation():
     conn.close()
 
     return redirect('/admin_dashboard')
+
+# Logout route to clear session
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.pop('admin_logged_in', None)
+    return '', 204  # Return empty response with HTTP 204 No Content status
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
