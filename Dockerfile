@@ -4,14 +4,11 @@ FROM python:3.9-slim
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the contents of the "app" directory to /app in the container
-COPY ./app /app
-
-# Debugging: List the contents of the /app directory to ensure requirements.txt is copied
-RUN ls -la /app
+# Copy the contents of the "app" directory into the container's "/app" directory
+COPY ./app/ .
 
 # Install the dependencies from requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose port 5000 for Flask
 EXPOSE 5000
