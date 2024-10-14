@@ -2,9 +2,14 @@ from flask import Flask, request, redirect, render_template, session
 import hashlib
 import mysql.connector
 import os
+from flask_session import Session
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Needed for session handling
+
+# Configure server-side session storage
+app.config['SESSION_TYPE'] = 'filesystem'  # You can store it in the filesystem
+Session(app)
 
 # Function to hash names (for index.html use)
 def encrypt_name(name):
