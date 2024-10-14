@@ -8,7 +8,11 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Needed for session handling
 
 # Configure server-side session storage
-app.config['SESSION_TYPE'] = 'filesystem'  # You can store it in the filesystem
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_PERMANENT'] = True  # Make session persistent
+app.config['PERMANENT_SESSION_LIFETIME'] = 3600  # 1 hour
+app.config['SESSION_FILE_DIR'] = '/tmp/flask_session'  # Ensure sessions are stored
+app.config['SESSION_FILE_THRESHOLD'] = 500  # Optional, to control number of session files
 Session(app)
 
 # Function to hash names (for index.html use)
