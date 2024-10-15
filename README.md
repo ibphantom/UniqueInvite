@@ -119,7 +119,7 @@
   <span style="font-size: 1.5em;">Contributing</span>
 </p>
 
-<p align="center">This project is licensed under the <a href="https://github.com/ibphantom/UniqueInvite/blob/main/LICENSE">MIT License</a> for individual use. <br> For commercial licensing, please see the <a href="https://github.com/ibphantom/UniqueInvite/blob/main/COMMERCIAL_LICENSE">Commercial License</a> for details.</p>
+<p align="center">Contributions are welcome! Please fork the repository and create a pull request for any features, bug fixes, or documentation improvements.</p>
 
 <hr>
 
@@ -127,4 +127,4 @@
   <span style="font-size: 1.5em;">License</span>
 </p>
 
-<p align="center">This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.</p>
+<p align="center">This project is licensed under the <a href="https://github.com/ibphantom/UniqueInvite/blob/main/LICENSE">MIT License</a> for individual use. <br> For commercial licensing, please see the <a href="https://github.com/ibphantom/UniqueInvite/blob/main/COMMERCIAL_LICENSE">Commercial License</a> for details.</p>
