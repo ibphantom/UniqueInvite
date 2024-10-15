@@ -58,7 +58,7 @@
 
 <ul>
   <li><b>Technologies Used</b>: Flask, MySQL, HTML, JavaScript, CSS.</li>
-  <li><b>Encryption</b>: SHA-256 hashing is used for securely storing admin credentials.</li>
+  <li><b>Encryption</b>: SHA-256 hashing is used for securely storing user and admin credentials within the SQL Database</li>
   <li><b>JavaScript Integration</b>: JavaScript is used to handle dynamic aspects of the front end, such as adjusting form widths and logging out users automatically when the admin dashboard window is closed.</li>
   <li><b>Docker Compatibility</b>: UniqueInvite can be containerized using Docker, allowing for easy deployment across different environments.</li>
 </ul>
