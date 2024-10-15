@@ -8,7 +8,7 @@
   <span style="font-size: 1.5em;">Overview</span>
 </p>
 
-UniqueInvite is a Flask-based invitation management system designed to simplify the process of inviting users to specific services or events through a unique link. It supports both admin and user functionality, with easy integration into media or other personalized platforms. The main objective of UniqueInvite is to enable controlled access with a user-friendly interface for both invitation creators and recipients.
+<p align="center">UniqueInvite is a Flask-based invitation management system designed to simplify the process of inviting users to specific services or events through a unique link. It supports both admin and user functionality, with easy integration into media or other personalized platforms. The main objective of UniqueInvite is to enable controlled access with a user-friendly interface for both invitation creators and recipients.</p>
 
 <hr>
 
@@ -16,27 +16,39 @@ UniqueInvite is a Flask-based invitation management system designed to simplify 
   <span style="font-size: 1.5em;">Features</span>
 </p>
 
-### User Invitations
+<p align="center"><b>User Invitations</b></p>
 
-- **User Invitation Form**: The public-facing page (`index.html`) allows users to input their invitation details and receive access through a unique link. Users provide a name that is checked against the database for validity before proceeding.
+<ul>
+  <li>**User Invitation Form**: The public-facing page (`index.html`) allows users to input their invitation details and receive access through a unique link. Users provide a name that is checked against the database for validity before proceeding.</li>
+</ul>
 
-### Admin Functionality
+<p align="center"><b>Admin Functionality</b></p>
 
-- **Admin Login**: Admin users authenticate using the login page (`admin.html`). Authentication is handled securely using SHA-256 hashing for passwords, ensuring only authorized users gain access to the management system.
-- **Admin Dashboard**: The `admin_dashboard.html` provides the main interface for managing invitations. It includes functionalities to:
-  - **View Invitations**: A table listing all current invitations, including ID, hash, and links.
-  - **Edit/Delete Invitations**: Admins can update or delete invitations directly from the dashboard.
-  - **Add New Invitations**: A form to add new invitations is also available within the dashboard, enabling quick onboarding of new users.
-  - **Logout Management**: JavaScript handles the logout request upon window close, ensuring sessions are appropriately managed.
+<ul>
+  <li>**Admin Login**: Admin users authenticate using the login page (`admin.html`). Authentication is handled securely using SHA-256 hashing for passwords, ensuring only authorized users gain access to the management system.</li>
+  <li>**Admin Dashboard**: The `admin_dashboard.html` provides the main interface for managing invitations. It includes functionalities to:
+    <ul>
+      <li>**View Invitations**: A table listing all current invitations, including ID, hash, and links.</li>
+      <li>**Edit/Delete Invitations**: Admins can update or delete invitations directly from the dashboard.</li>
+      <li>**Add New Invitations**: A form to add new invitations is also available within the dashboard, enabling quick onboarding of new users.</li>
+      <li>**Logout Management**: JavaScript handles the logout request upon window close, ensuring sessions are appropriately managed.</li>
+    </ul>
+  </li>
+</ul>
 
-### Backend and Integration
+<p align="center"><b>Backend and Integration</b></p>
 
-- **Flask Application** (`app.py`): The core of the UniqueInvite system is handled by a Flask app. Key routes include:
-  - `/`: Handles user invitation lookup and redirection.
-  - `/admin`: Handles admin login, where the `admin.html` form is used for authentication.
-  - `/admin/dashboard`: After successful login, admins are redirected to the dashboard (`admin_dashboard.html`) to manage invitations.
-- **Database Integration**: Uses MySQL for storing and managing user invitations, providing persistent data storage.
-- **Session Management**: Manages sessions for authenticated admin users, ensuring that only logged-in users can perform critical actions.
+<ul>
+  <li>**Flask Application** (`app.py`): The core of the UniqueInvite system is handled by a Flask app. Key routes include:
+    <ul>
+      <li>`/`: Handles user invitation lookup and redirection.</li>
+      <li>`/admin`: Handles admin login, where the `admin.html` form is used for authentication.</li>
+      <li>`/admin/dashboard`: After successful login, admins are redirected to the dashboard (`admin_dashboard.html`) to manage invitations.</li>
+    </ul>
+  </li>
+  <li>**Database Integration**: Uses MySQL for storing and managing user invitations, providing persistent data storage.</li>
+  <li>**Session Management**: Manages sessions for authenticated admin users, ensuring that only logged-in users can perform critical actions.</li>
+</ul>
 
 <hr>
 
@@ -44,10 +56,12 @@ UniqueInvite is a Flask-based invitation management system designed to simplify 
   <span style="font-size: 1.5em;">Technical Details</span>
 </p>
 
-- **Technologies Used**: Flask, MySQL, HTML, JavaScript, CSS.
-- **Encryption**: SHA-256 hashing is used for securely storing admin credentials.
-- **JavaScript Integration**: JavaScript is used to handle dynamic aspects of the front end, such as adjusting form widths and logging out users automatically when the admin dashboard window is closed.
-- **Docker Compatibility**: UniqueInvite can be containerized using Docker, allowing for easy deployment across different environments.
+<ul>
+  <li>**Technologies Used**: Flask, MySQL, HTML, JavaScript, CSS.</li>
+  <li>**Encryption**: SHA-256 hashing is used for securely storing admin credentials.</li>
+  <li>**JavaScript Integration**: JavaScript is used to handle dynamic aspects of the front end, such as adjusting form widths and logging out users automatically when the admin dashboard window is closed.</li>
+  <li>**Docker Compatibility**: UniqueInvite can be containerized using Docker, allowing for easy deployment across different environments.</li>
+</ul>
 
 <hr>
 
@@ -55,41 +69,27 @@ UniqueInvite is a Flask-based invitation management system designed to simplify 
   <span style="font-size: 1.5em;">How to Run</span>
 </p>
 
-1. **Clone Repository**:
-   ```bash
-   git clone https://github.com/ibphantom/UniqueInvite.git
-</p>
-
-<p align="center">
-  <span style="font-size: 2em;">Install Requirements</span>
-</p>
-
-<p>Ensure Python and MySQL are installed, then run:</p>
-
-<pre><code>pip install -r requirements.txt</code></pre>
-
-<hr>
-
-<p align="center">
-  <span style="font-size: 2em;">Configure Database</span>
-</p>
-
-<p>Set up a MySQL database and update the connection parameters in <code>app.py</code> accordingly.</p>
+<ol>
+  <li><b>Clone Repository</b>:
+    <pre><code>git clone https://github.com/ibphantom/UniqueInvite.git</code></pre>
+  </li>
+  <li><b>Install Requirements</b>:
+    <p>Ensure Python and MySQL are installed, then run:</p>
+    <pre><code>pip install -r requirements.txt</code></pre>
+  </li>
+  <li><b>Configure Database</b>:
+    <p>Set up a MySQL database and update the connection parameters in <code>app.py</code> accordingly.</p>
+  </li>
+  <li><b>Run Application</b>:
+    <pre><code>python app.py</code></pre>
+    <p>The app will start on <a href="http://127.0.0.1:5000/">http://127.0.0.1:5000/</a> by default.</p>
+  </li>
+</ol>
 
 <hr>
 
 <p align="center">
-  <span style="font-size: 2em;">Run Application</span>
-</p>
-
-<pre><code>python app.py</code></pre>
-
-<p>The app will start on <a href="http://127.0.0.1:5000/">http://127.0.0.1:5000/</a> by default.</p>
-
-<hr>
-
-<p align="center">
-  <span style="font-size: 2em;">File Structure</span>
+  <span style="font-size: 1.5em;">File Structure</span>
 </p>
 
 <ul>
@@ -103,7 +103,7 @@ UniqueInvite is a Flask-based invitation management system designed to simplify 
 <hr>
 
 <p align="center">
-  <span style="font-size: 2em;">Future Improvements</span>
+  <span style="font-size: 1.5em;">Future Improvements</span>
 </p>
 
 <ul>
@@ -116,15 +116,15 @@ UniqueInvite is a Flask-based invitation management system designed to simplify 
 <hr>
 
 <p align="center">
-  <span style="font-size: 2em;">Contributing</span>
+  <span style="font-size: 1.5em;">Contributing</span>
 </p>
 
-<p>Contributions are welcome! Please fork the repository and create a pull request for any features, bug fixes, or documentation improvements.</p>
+<p align="center">Contributions are welcome! Please fork the repository and create a pull request for any features, bug fixes, or documentation improvements.</p>
 
 <hr>
 
 <p align="center">
-  <span style="font-size: 2em;">License</span>
+  <span style="font-size: 1.5em;">License</span>
 </p>
 
-<p>This project is licensed under the MIT License - see the LICENSE file for details.</p>
+<p align="center">This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.</p>
