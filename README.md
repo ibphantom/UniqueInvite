@@ -19,19 +19,19 @@
 <p align="center"><b>User Invitations</b></p>
 
 <ul>
-  <li>**User Invitation Form**: The public-facing page (`index.html`) allows users to input their invitation details and receive access through a unique link. Users provide a name that is checked against the database for validity before proceeding.</li>
+  <li><b>User Invitation Form</b>: The public-facing page (`index.html`) allows users to input their invitation details and receive access through a unique link. Users provide a name that is checked against the database for validity before proceeding.</li>
 </ul>
 
 <p align="center"><b>Admin Functionality</b></p>
 
 <ul>
-  <li>**Admin Login**: Admin users authenticate using the login page (`admin.html`). Authentication is handled securely using SHA-256 hashing for passwords, ensuring only authorized users gain access to the management system.</li>
-  <li>**Admin Dashboard**: The `admin_dashboard.html` provides the main interface for managing invitations. It includes functionalities to:
+  <li><b>Admin Login</b>: Admin users authenticate using the login page (`admin.html`). Authentication is handled securely using SHA-256 hashing for passwords, ensuring only authorized users gain access to the management system.</li>
+  <li><b>Admin Dashboard</b>: The `admin_dashboard.html` provides the main interface for managing invitations. It includes functionalities to:
     <ul>
-      <li>**View Invitations**: A table listing all current invitations, including ID, hash, and links.</li>
-      <li>**Edit/Delete Invitations**: Admins can update or delete invitations directly from the dashboard.</li>
-      <li>**Add New Invitations**: A form to add new invitations is also available within the dashboard, enabling quick onboarding of new users.</li>
-      <li>**Logout Management**: JavaScript handles the logout request upon window close, ensuring sessions are appropriately managed.</li>
+      <li><b>View Invitations</b>: A table listing all current invitations, including ID, hash, and links.</li>
+      <li><b>Edit/Delete Invitations</b>: Admins can update or delete invitations directly from the dashboard.</li>
+      <li><b>Add New Invitations</b>: A form to add new invitations is also available within the dashboard, enabling quick onboarding of new users.</li>
+      <li><b>Logout Management</b>: JavaScript handles the logout request upon window close, ensuring sessions are appropriately managed.</li>
     </ul>
   </li>
 </ul>
@@ -39,15 +39,15 @@
 <p align="center"><b>Backend and Integration</b></p>
 
 <ul>
-  <li>**Flask Application** (`app.py`): The core of the UniqueInvite system is handled by a Flask app. Key routes include:
+  <li><b>Flask Application</b> (`app.py`): The core of the UniqueInvite system is handled by a Flask app. Key routes include:
     <ul>
       <li>`/`: Handles user invitation lookup and redirection.</li>
       <li>`/admin`: Handles admin login, where the `admin.html` form is used for authentication.</li>
       <li>`/admin/dashboard`: After successful login, admins are redirected to the dashboard (`admin_dashboard.html`) to manage invitations.</li>
     </ul>
   </li>
-  <li>**Database Integration**: Uses MySQL for storing and managing user invitations, providing persistent data storage.</li>
-  <li>**Session Management**: Manages sessions for authenticated admin users, ensuring that only logged-in users can perform critical actions.</li>
+  <li><b>Database Integration</b>: Uses MySQL for storing and managing user invitations, providing persistent data storage.</li>
+  <li><b>Session Management</b>: Manages sessions for authenticated admin users, ensuring that only logged-in users can perform critical actions.</li>
 </ul>
 
 <hr>
@@ -57,10 +57,10 @@
 </p>
 
 <ul>
-  <li>**Technologies Used**: Flask, MySQL, HTML, JavaScript, CSS.</li>
-  <li>**Encryption**: SHA-256 hashing is used for securely storing admin credentials.</li>
-  <li>**JavaScript Integration**: JavaScript is used to handle dynamic aspects of the front end, such as adjusting form widths and logging out users automatically when the admin dashboard window is closed.</li>
-  <li>**Docker Compatibility**: UniqueInvite can be containerized using Docker, allowing for easy deployment across different environments.</li>
+  <li><b>Technologies Used</b>: Flask, MySQL, HTML, JavaScript, CSS.</li>
+  <li><b>Encryption</b>: SHA-256 hashing is used for securely storing admin credentials.</li>
+  <li><b>JavaScript Integration</b>: JavaScript is used to handle dynamic aspects of the front end, such as adjusting form widths and logging out users automatically when the admin dashboard window is closed.</li>
+  <li><b>Docker Compatibility</b>: UniqueInvite can be containerized using Docker, allowing for easy deployment across different environments.</li>
 </ul>
 
 <hr>
