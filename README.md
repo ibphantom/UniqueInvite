@@ -119,7 +119,7 @@
   <span style="font-size: 1.5em;">Contributing</span>
 </p>
 
-<p align="center">Contributions are welcome! Please fork the repository and create a pull request for any features, bug fixes, or documentation improvements.</p>
+<p align="center">Contributions are welcome! <br> Please fork the repository and create a pull request for any features, bug fixes, or documentation improvements.</p>
 
 <hr>
 
